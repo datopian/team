@@ -27,23 +27,19 @@ const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/s
 
 /* eslint-disable react/no-deprecated */
 export default function App({data}) {
-  const layerProps = {
+  const layer = new IconLayer({
+    id: 'icon',
     data,
     pickable: true,
+    getIcon: d => ({
+      url: d.avatar,
+      width: 128,
+      height: 128,
+      anchorY: 128
+    }),
     getPosition: d => [d.lng, d.lat],
-    iconAtlas: 'https://raw.githubusercontent.com/datopian/global-presence/master/img/icon.png',
-    iconMapping: {
-      marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
-    }
-  };
-
-  const layer = new IconLayer({
-    ...layerProps,
-    id: 'icon',
-    getIcon: d => 'marker',
     sizeScale: 15,
-		getSize: d => 1.5,
-    getColor: d => [255,158,86]
+		getSize: d => 1.5
   });
 
   return (
@@ -56,7 +52,7 @@ export default function App({data}) {
         layers={[layer]}
 				getTooltip={
           ({object}) => object && {
-            html: `<h4 style="margin: 0">${object.fullname}</h4>${object.position}<br /><img src=${object.avatar} width=50/>`,
+            html: `<h4 style="margin: 0">${object.fullname}</h4>${object.position}`,
             style: {
               backgroundColor: '#fff',
               fontSize: '0.8em'
