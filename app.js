@@ -37,9 +37,9 @@ export default function App({data}) {
       height: 128,
       anchorY: 128
     }),
+    getSize: d => Math.floor(Math.random() * 36) + 20,
     getPosition: d => [d.lng, d.lat],
-    sizeScale: 15,
-		getSize: d => 1.5
+    sizeScale: 1
   });
 
   return (
