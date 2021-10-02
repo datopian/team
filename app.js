@@ -25,17 +25,46 @@ const INITIAL_VIEW_STATE = {
 
 const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
 
+function makeCircleImage(radius, src, success) {
+  var canvas = document.createElement('canvas');
+  canvas.width = canvas.height = radius * 2;
+  var ctx = canvas.getContext('2d');
+  var img = new Image();
+  img.crossOrigin='anonymous';
+  img.src = src;
+  return new Promise((resolve, reject) => {
+    img.onload = function() {
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      // we use compositing, offers better antialiasing than clip()
+      ctx.globalCompositeOperation = 'destination-in';
+      ctx.arc(radius, radius, radius, 0, Math.PI*2);
+      ctx.fill();
+      resolve(canvas.toDataURL());
+    };
+    img.onerror = reject;
+  })
+}
+
 /* eslint-disable react/no-deprecated */
 export default function App({data}) {
+  const dataWithAvatarsLoaded = Promise.all(data.map(async (item) => {
+    let avatarDataUrl = item.avatar;
+    try {
+      avatarDataUrl = await makeCircleImage(64, item.avatar);
+    } catch(e) {
+      console.error(e);
+    }
+    return { ...item, avatarDataUrl };
+  }));
+
   const layer = new IconLayer({
     id: 'icon',
-    data,
+    data: dataWithAvatarsLoaded,
     pickable: true,
     getIcon: d => ({
-      url: d.avatar,
+      url: d.avatarDataUrl,
       width: 128,
-      height: 128,
-      anchorY: 128
+      height: 128
     }),
     getSize: d => Math.floor(Math.random() * 36) + 20,
     getPosition: d => [d.lng, d.lat],
