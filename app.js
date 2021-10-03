@@ -66,28 +66,27 @@ export default function App({data}) {
       width: 128,
       height: 128
     }),
-    getSize: d => Math.floor(Math.random() * 36) + 20,
+    getSize: d => Math.floor(Math.random() * 25) + 15,
     getPosition: d => [d.lng, d.lat],
     sizeScale: 1
   });
+
+  const tooltip = ({object}) => object && {
+    html: `<h4 style="margin: 0">${object.fullname}</h4>${object.position}<br />${object.country}`,
+    style: {
+      backgroundColor: '#fff',
+      fontSize: '0.8em'
+    }
+  }
 
   return (
     <>
       <DeckGL
         views={MAP_VIEW}
         initialViewState={INITIAL_VIEW_STATE}
-        controller={{dragRotate: false}}
         controller={true}
         layers={[layer]}
-				getTooltip={
-          ({object}) => object && {
-            html: `<h4 style="margin: 0">${object.fullname}</h4>${object.position}`,
-            style: {
-              backgroundColor: '#fff',
-              fontSize: '0.8em'
-            }
-          }
-        }
+				getTooltip={tooltip}
       >
         <StaticMap reuseMaps mapStyle={MAP_STYLE} preventStyleDiffing={true} />
       </DeckGL>
