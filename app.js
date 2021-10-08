@@ -66,16 +66,17 @@ export default function App({data}) {
       width: 128,
       height: 128
     }),
-    getSize: d => Math.floor(Math.random() * 25) + 15,
+    getSize: d => 35,
     getPosition: d => [d.lng, d.lat],
     sizeScale: 1
   });
 
   const tooltip = ({object}) => object && {
-    html: `<h4 style="margin: 0">${object.fullname}</h4>${object.position}<br />${object.country}`,
+    html: `<h4 style="margin: 0">${object.fullname}</h4><br /><img src="${object.avatarDataUrl}" width=120 /><br /><br />${object.position}<br />${object.country}`,
     style: {
       backgroundColor: '#fff',
-      fontSize: '0.8em'
+      fontSize: '0.8em',
+      'text-align': 'center'
     }
   }
 
