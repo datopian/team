@@ -25,7 +25,7 @@ const INITIAL_VIEW_STATE = {
 
 const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
 
-function makeCircleImage(radius, src, success) {
+function makeAvatarsCircleAndBnW(radius, src, success) {
   var canvas = document.createElement('canvas');
   canvas.width = canvas.height = radius * 2;
   var ctx = canvas.getContext('2d');
@@ -35,6 +35,16 @@ function makeCircleImage(radius, src, success) {
   return new Promise((resolve, reject) => {
     img.onload = function() {
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      // grayscale images so that all avatars are in black&white
+      let imgData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+      let pixels = imgData.data;
+      for (var i = 0; i < pixels.length; i += 4) {
+        let lightness = parseInt(pixels[i]*.299 + pixels[i + 1]*.587 + pixels[i + 2]*.114);
+        pixels[i] = lightness;
+        pixels[i + 1] = lightness;
+        pixels[i + 2] = lightness;
+      }
+      ctx.putImageData(imgData, 0, 0);
       // we use compositing, offers better antialiasing than clip()
       ctx.globalCompositeOperation = 'destination-in';
       ctx.arc(radius, radius, radius, 0, Math.PI*2);
@@ -50,7 +60,7 @@ export default function App({data}) {
   const dataWithAvatarsLoaded = Promise.all(data.map(async (item) => {
     let avatarDataUrl = item.avatar;
     try {
-      avatarDataUrl = await makeCircleImage(64, item.avatar);
+      avatarDataUrl = await makeAvatarsCircleAndBnW(64, item.avatar);
     } catch(e) {
       console.error(e);
     }
@@ -75,7 +85,7 @@ export default function App({data}) {
     html: `<h4 style="margin: 0">${object.fullname}</h4><br /><img src="${object.avatarDataUrl}" width=120 /><br /><br />${object.position}<br />${object.country}`,
     style: {
       backgroundColor: '#fff',
-      fontSize: '0.8em',
+      fontSize: '16px',
       'text-align': 'center'
     }
   }
