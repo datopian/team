@@ -15,10 +15,10 @@ const DATA_URL = 'https://raw.githubusercontent.com/datopian/team/master/data/te
 
 const MAP_VIEW = new MapView({repeat: true});
 const INITIAL_VIEW_STATE = {
-  longitude: -35,
-  latitude: 36.7,
-  zoom: 1.8,
-  maxZoom: 20,
+  longitude: -10,
+  latitude: 15,
+  zoom: 2.2,
+  maxZoom: 5,
   pitch: 0,
   bearing: 0
 };
