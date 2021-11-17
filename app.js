@@ -82,7 +82,7 @@ export default function App({data}) {
   });
 
   const tooltip = ({object}) => object && {
-    html: `<h4 style="margin: 0">${object.fullname}</h4><br /><img src="${object.avatarDataUrl}" width=120 /><br /><br />${object.position}<br />${object.country}`,
+    html: `<img class="avatar-img" src="${object.avatarDataUrl}" /> <br /> <h4 class="avatar-name">${object.fullname}</h4> <h5 class="avatar-place">${object.position} </h5><h5 class="avatar-country">${object.country}</h5>`,
     style: {
       backgroundColor: '#fff',
       fontSize: '16px',
